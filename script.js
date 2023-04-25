@@ -15,7 +15,6 @@ fetch("https://fakestoreapi.com/products").then((dan) => dan.json()).then((res) 
             <p>$${price}</p>
         </div>
         </button>
-        
         `
     });
     // console.log(empArr);
