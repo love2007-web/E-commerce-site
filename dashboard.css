@@ -3,29 +3,12 @@
     padding: 0;
     box-sizing: border-box;
 }
-.posted{
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-    text-align: center
+.logo{
+    width: 120px;
 }
-.btn1{
-    background-color: transparent;
-    border: 0;
-    border-radius: 10px;
-    background-color: brown;
-    padding: 10px;
-    margin: 10px;
-
+#main img{
+    width: 120px;
 }
-.btn1wrapper{
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-}
-.done{
-    margin-top: 10px;
-}
-#posted{
-    background-color: red;
+#items:hover{
+    border-color: red;
 }
