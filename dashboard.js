@@ -17,7 +17,7 @@ logoutBtn.addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
-<script src="https://checkout.flutterwave.com/v3.js"></script>
+
 
 let myGoods;
     let url = "https://fakestoreapi.com/products";
@@ -37,7 +37,7 @@ let myGoods;
         let resp = await myGoods.forEach((el, index)=>{
         let errmm = myCart.some(ssmm => ssmm.id == el.id);
         dispGoods.innerHTML += `
-                <div onclick="showOne(${el.id})" class='col-md-3 m-1 card shadow w-25'>
+                <div onclick="showOne(${el.id})" class='btn col-md-3 m-1 card shadow w-25'>
                     <img src=${el.image} w-75 />
                     <p>${el.title}</p>
                     <h3>$${el.price}</h3>
