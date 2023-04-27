@@ -6,9 +6,9 @@
 .logo{
     width: 120px;
 }
-#main img{
+/* #main img{
     width: 120px;
-}
+} */
 #items:hover{
     border-color: red;
 }

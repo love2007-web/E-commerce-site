@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+main img{
+    width: 400px;
+}
+svg{
+    margin-right: 12px;
+}
+.cart{
+    cursor: pointer;
+}
+#cart-count{
+    width: 20px;
+    height: 20px;
+    border: ;
+    border-radius: 20px;
+}
