@@ -19,3 +19,14 @@
     border-radius: 100%;
     padding: 3px;
 }
+.cart-img{
+    width: 100px;
+    height: 200px;
+}
+.cart-img img{
+    width: 100%;
+}
+.modal-footer{
+    display: flex;
+    justify-content: space-between;
+}

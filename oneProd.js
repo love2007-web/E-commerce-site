@@ -6,6 +6,7 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
     console.log(myGoods);
     let myCart = JSON.parse(localStorage.getItem("cart")) || [];
     let theItem = myGoods.find(el=> el.id == the_id);
+    console.log(theItem);
     let errmm = myCart.some(ssmm => ssmm.id == theItem.id);
     document.getElementById("prod").innerHTML = `
         <div>
@@ -55,32 +56,60 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
     console.log(myCart);
 
     
-    myCart.forEach(element => {
+    myCart.forEach((element, index) => {
+        let itemId = `item-${index}`; // generate unique id for each item
+        console.log(index);
         document.getElementById('modal-body').innerHTML += `
-    <div class="d-flex">
-        <div class="cart-img">
-        <img src="${element.image}"/>
-        </div>
-        <div>
-        <h6>${element.title}</h6>
-        <h5>$${element.price}</h5>
-        </div>
-        <div>
-        <button onclick="minusProd(${element.price})">&minus;</button>
-        <span id="dispQTY">${theItem.quantity}</span>
-        <button onclick="addProd(${element.price})">&plus;</button><br>
-        <span id="showPrice">${element.totPrice}</span>
-        </div>
-    </div>
-`
+            <div class="d-flex">
+                <div class="cart-img">
+                    <img src="${element.image}"/>
+                </div>
+                <div>
+                    <h6>${element.title}</h6>
+                    <h5>$${element.price}</h5>
+                </div>
+                <div>
+                    <button onclick="minusProd(${index}, ${element.price})">&minus;</button>
+                    <span id="dispQTY-${itemId}">${element.quantity}</span>
+                    <button onclick="addProd(${index}, ${element.price})">&plus;</button><br>
+                    <span id="showPrice-${itemId}">$${element.totPrice}</span>
+                </div>
+            </div>
+        `;
     });
-    function addProd(price){
-        theItem.quantity++;
-        tPrice = price * theItem.quantity;
-        document.getElementById("showPrice").innerHTML ="Total Price "+ "$"+ tPrice
-        document.getElementById("dispQTY").innerHTML = theItem.quantity;
-        theItem.totPrice = tPrice;
-
-        console.log(theItem);
-        localStorage.setItem("goods", JSON.stringify(myGoods))
+    
+    function addProd(index, price) {
+        myCart[index].quantity++;
+        myCart[index].totPrice = myCart[index].quantity * price;
+    
+        let itemId = `item-${index}`;
+        document.getElementById(`showPrice-${itemId}`).innerHTML = `$${myCart[index].totPrice}`;
+        document.getElementById(`dispQTY-${itemId}`).innerHTML = myCart[index].quantity;
+    
+        localStorage.setItem("cart", JSON.stringify(myCart));
+        updateTotalPrice()
     }
+    
+    function minusProd(index, price) {
+        if (myCart[index].quantity > 1) {
+            myCart[index].quantity--;
+            myCart[index].totPrice = myCart[index].quantity * price;
+    
+            let itemId = `item-${index}`;
+            document.getElementById(`showPrice-${itemId}`).innerHTML = `$${myCart[index].totPrice}`;
+            document.getElementById(`dispQTY-${itemId}`).innerHTML = myCart[index].quantity;
+    
+            localStorage.setItem("cart", JSON.stringify(myCart));
+        }
+        updateTotalPrice()
+    }
+    function updateTotalPrice() {
+        let totalPrice = 0;
+        myCart.forEach(item => {
+        totalPrice += item.totPrice;
+        });
+
+        document.getElementById("cart-total").innerHTML = "Total: $" + totalPrice;
+
+    }
+    updateTotalPrice()
