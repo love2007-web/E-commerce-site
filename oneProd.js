@@ -8,6 +8,7 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
     let theItem = myGoods.find(el=> el.id == the_id);
     console.log(theItem);
     let errmm = myCart.some(ssmm => ssmm.id == theItem.id);
+    dispCart()
     document.getElementById("prod").innerHTML = `
         <div>
             <img src=${theItem.image} />
@@ -27,6 +28,7 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
     console.log(theItem);
     function addToCart(ev, id){
         let found = myGoods.find(el=> el.id == id)
+        found.quantity = 1; // Set default quantity to 1
         console.log(found);
         console.log(myCart);
         let errmm = myCart.some(ssmm => ssmm.id == found.id);
@@ -41,6 +43,8 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
             return;
         }else{
             ev.target.innerHTML = "Remove from cart"
+            found.quantity = 1; // set the default quantity to 1
+            found.totPrice = found.price; // set the total price to the price of the item
             myCart.push(found);
             localStorage.setItem("cart", JSON.stringify(myCart));
             cartCount();
@@ -48,6 +52,7 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
         console.log(myCart);
         // displayGoods();
     }
+    
     function cartCount(){
         document.getElementById("cart-count").innerHTML = myCart.length;
     }
@@ -56,27 +61,28 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
     console.log(myCart);
 
     
-    myCart.forEach((element, index) => {
-        let itemId = `item-${index}`; // generate unique id for each item
-        console.log(index);
-        document.getElementById('modal-body').innerHTML += `
-            <div class="d-flex">
-                <div class="cart-img">
-                    <img src="${element.image}"/>
+    function dispCart() {
+        myCart.forEach((element, index) => {
+            let itemId = `item-${index}`; // generate unique id for each item
+            document.getElementById('modal-body').innerHTML += `
+                <div class="d-flex">
+                    <div class="cart-img">
+                        <img src="${element.image}"/>
+                    </div>
+                    <div>
+                        <h6>${element.title}</h6>
+                        <h5>$${element.price}</h5>
+                    </div>
+                    <div>
+                        <button onclick="minusProd(${index}, ${element.price})">&minus;</button>
+                        <span id="dispQTY-${itemId}">${element.quantity}</span>
+                        <button onclick="addProd(${index}, ${element.price})">&plus;</button><br>
+                        <span id="showPrice-${itemId}">$${element.totPrice}</span>
+                    </div>
                 </div>
-                <div>
-                    <h6>${element.title}</h6>
-                    <h5>$${element.price}</h5>
-                </div>
-                <div>
-                    <button onclick="minusProd(${index}, ${element.price})">&minus;</button>
-                    <span id="dispQTY-${itemId}">${element.quantity}</span>
-                    <button onclick="addProd(${index}, ${element.price})">&plus;</button><br>
-                    <span id="showPrice-${itemId}">$${element.totPrice}</span>
-                </div>
-            </div>
-        `;
-    });
+            `;
+        });
+    }
     
     function addProd(index, price) {
         myCart[index].quantity++;
@@ -100,8 +106,8 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
             document.getElementById(`dispQTY-${itemId}`).innerHTML = myCart[index].quantity;
     
             localStorage.setItem("cart", JSON.stringify(myCart));
+            updateTotalPrice()
         }
-        updateTotalPrice()
     }
     function updateTotalPrice() {
         let totalPrice = 0;
@@ -110,6 +116,33 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
         });
 
         document.getElementById("cart-total").innerHTML = "Total: $" + totalPrice;
-
+        
     }
     updateTotalPrice()
+    let currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    
+    // flutter wave payment
+    function makePayment() {
+        FlutterwaveCheckout({
+          public_key: "FLWPUBK_TEST-f3c675852064643d0c7beea69f1cc965-X",
+          tx_ref: "titanic-48981487343MDI0NzMx",
+          amount: 54600,
+          currency: "NGN",
+          payment_options: "card, banktransfer, ussd",
+          redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+          meta: {
+            consumer_id: 23,
+            consumer_mac: "92a3-912ba-1192a",
+          },
+          customer: {
+            email: currentUser.email,
+            phone_number: "08102909304",
+            name: currentUser.username
+          },
+          customizations: {
+            title: "The Titanic Store",
+            description: "Payment for an awesome cruise",
+            logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+          },
+        });
+      }
