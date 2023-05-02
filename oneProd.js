@@ -120,14 +120,19 @@ let myGoods = JSON.parse(localStorage.getItem("goods"));
     }
     updateTotalPrice()
     let currentUser = JSON.parse(localStorage.getItem("currentUser"))
+
+    let totalPrice = 0;
+        myCart.forEach(item => {
+        totalPrice += item.totPrice;
+        });
     
     // flutter wave payment
     function makePayment() {
         FlutterwaveCheckout({
           public_key: "FLWPUBK_TEST-f3c675852064643d0c7beea69f1cc965-X",
           tx_ref: "titanic-48981487343MDI0NzMx",
-          amount: 54600,
-          currency: "NGN",
+          amount: totalPrice,
+          currency: "USD",
           payment_options: "card, banktransfer, ussd",
           redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
           meta: {
